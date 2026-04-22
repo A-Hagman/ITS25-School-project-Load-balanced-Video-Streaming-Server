@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "control" do |ctrl|
     ctrl.vm.hostname = "control"
     ctrl.vm.network "private_network", ip: CONTROL_IP
-    ctrl.provider "virtualbox" do |vb|
+    ctrl.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
     end
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "Loadbaring" do |lb|
     lb.vm.hostname = "control"
     lb.vm.network "private_network", ip: LOADBARING_IP
-    lb.provider "virtualbox" do |vb|
+    lb.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
     end
@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "Database" do |db|
     db.vm.hostname = "Database"
     db.vm.network "private_network", ip: DATABASE_IP
-    db.provider "virtualbox" do |vb|
+    db.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
     end
@@ -95,7 +95,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "streaming" do |str|
     str.vm.hostname = "streaming"
     str.vm.network "private_network", ip: STREAMING_IP
-    str.provider "virtualbox" do |vb|
+    str.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
     end
