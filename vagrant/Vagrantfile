@@ -25,6 +25,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     ctrl.vm.provision "shell", inline: <<-SHELL
+    # Automatilcy uppdates the vm on start
+    apt-get update
+
+    # Installs Ansible on boot up
+    apt-get install ansible -y
+
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m         Control Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
@@ -40,6 +46,9 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     lb.vm.provision "shell", inline: <<-SHELL
+    # Automatilcy uppdates the vm on start
+    apt-get update
+
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m      Loadbaring Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
@@ -55,6 +64,9 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     web1.vm.provision "shell", inline: <<-SHELL
+    # Automatilcy uppdates the vm on start
+    apt-get update
+
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver1 Online        \e[0m"
       echo -e "\e[32m=================================\e[0m"
@@ -70,6 +82,9 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     web2.vm.provision "shell", inline: <<-SHELL
+    # Automatilcy uppdates the vm on start
+    apt-get update
+
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver2 Online        \e[0m"
       echo -e "\e[32m=================================\e[0m"
@@ -85,6 +100,9 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     db.vm.provision "shell", inline: <<-SHELL
+      # Automatilcy uppdates the vm on start
+      apt-get update
+
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m        Database Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
@@ -100,6 +118,9 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     str.vm.provision "shell", inline: <<-SHELL
+      # Automatilcy uppdates the vm on start
+      apt-get update
+
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m       Streaming Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
