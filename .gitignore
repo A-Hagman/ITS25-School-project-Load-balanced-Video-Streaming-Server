@@ -1,2 +1,8 @@
 vagrant/.vagrant/
 vagrant/ansible_id_ed25519.pub
+
+secrets.yml
+vars/secrets.yml
+
+.vscode/
+*.swp
