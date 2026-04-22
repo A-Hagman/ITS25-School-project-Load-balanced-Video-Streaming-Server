@@ -2,8 +2,12 @@
 # vi: set ft=ruby :
 
 # Designates veribles with ip for the VMs
-WEBSERVER1_IP = "192.168.56.11"
-WEBSERVER2_IP = "192.168.56.12"
+CONTROL_IP = "192.168.56.10"
+LOADBARING_IP = "192.168.56.11"
+WEBSERVER1_IP = "192.168.56.12"
+WEBSERVER2_IP = "192.168.56.13"
+DATABASE_IP = "192.168.56.14"
+STREAMING_IP = "192.168.56.15"
 
 # Designates veribles for RAM and CPUs
 RAM = "1024"
@@ -11,6 +15,36 @@ CPUs = "1"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/jammy64"
+
+  # Control vm 
+  config.vm.define "control" do |ctrl|
+    ctrl.vm.hostname = "control"
+    ctrl.vm.network "private_network", ip: CONTROL_IP
+    ctrl.provider "virtualbox" do |vb|
+      vb.memory = RAM
+      vb.cpus = CPUs
+    end
+    ctrl.vm.provision "shell", inline: <<-SHELL
+        echo -e "\e[32m=================================\e[0m"
+        echo -e "\e[32m         Control Online          \e[0m"
+        echo -e "\e[32m=================================\e[0m"
+      SHELL
+  end 
+
+  # Loadbaring vm
+  config.vm.define "Loadbaring" do |lb|
+    lb.vm.hostname = "control"
+    lb.vm.network "private_network", ip: LOADBARING_IP
+    lb.provider "virtualbox" do |vb|
+      vb.memory = RAM
+      vb.cpus = CPUs
+    end
+    lb.vm.provision "shell", inline: <<-SHELL
+        echo -e "\e[32m=================================\e[0m"
+        echo -e "\e[32m      Loadbaring Online          \e[0m"
+        echo -e "\e[32m=================================\e[0m"
+      SHELL
+  end 
 
   # Webbserver 1
   config.vm.define "webserver1" do |web1|
@@ -41,4 +75,34 @@ Vagrant.configure("2") do |config|
       echo -e "\e[32m=================================\e[0m"
     SHELL
   end
+  
+  # Database vm
+  config.vm.define "Database" do |db|
+    db.vm.hostname = "Database"
+    db.vm.network "private_network", ip: DATABASE_IP
+    db.provider "virtualbox" do |vb|
+      vb.memory = RAM
+      vb.cpus = CPUs
+    end
+    db.vm.provision "shell", inline: <<-SHELL
+        echo -e "\e[32m=================================\e[0m"
+        echo -e "\e[32m        Database Online          \e[0m"
+        echo -e "\e[32m=================================\e[0m"
+      SHELL
+  end 
+
+  # Streaming vm
+  config.vm.define "streaming" do |str|
+    str.vm.hostname = "streaming"
+    str.vm.network "private_network", ip: STREAMING_IP
+    str.provider "virtualbox" do |vb|
+      vb.memory = RAM
+      vb.cpus = CPUs
+    end
+    str.vm.provision "shell", inline: <<-SHELL
+        echo -e "\e[32m=================================\e[0m"
+        echo -e "\e[32m       Streaming Online          \e[0m"
+        echo -e "\e[32m=================================\e[0m"
+      SHELL
+  end 
 end
