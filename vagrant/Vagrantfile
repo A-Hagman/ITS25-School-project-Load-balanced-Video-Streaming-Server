@@ -29,16 +29,6 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
-    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
-      sleep 3
-    done
-
-    mkdir -p /home/vagrant/.ssh
-    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
-    chmod 700 /home/vagrant/.ssh
-    chmod 600 /home/vagrant/.ssh/authorized_keys
-    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m      Loadbaring Online          \e[0m"
@@ -58,16 +48,6 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
-    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
-      sleep 3
-    done
-
-    mkdir -p /home/vagrant/.ssh
-    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
-    chmod 700 /home/vagrant/.ssh
-    chmod 600 /home/vagrant/.ssh/authorized_keys
-    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver1 Online        \e[0m"
@@ -87,16 +67,6 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
-    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
-      sleep 3
-    done
-
-    mkdir -p /home/vagrant/.ssh
-    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
-    chmod 700 /home/vagrant/.ssh
-    chmod 600 /home/vagrant/.ssh/authorized_keys
-    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver2 Online        \e[0m"
@@ -116,16 +86,6 @@ Vagrant.configure("2") do |config|
       # Automatilcy uppdates the vm on start
       apt-get update
 
-      while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-        echo "Väntar på publik nyckel..."
-        sleep 3
-      done
-
-      mkdir -p /home/vagrant/.ssh
-      cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
-      chmod 700 /home/vagrant/.ssh
-      chmod 600 /home/vagrant/.ssh/authorized_keys
-      chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m        Database Online          \e[0m"
@@ -145,16 +105,6 @@ Vagrant.configure("2") do |config|
       # Automatilcy uppdates the vm on start
       apt-get update
 
-      while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-        echo "Väntar på publik nyckel..."
-        sleep 3
-      done
-
-      mkdir -p /home/vagrant/.ssh
-      cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
-      chmod 700 /home/vagrant/.ssh
-      chmod 600 /home/vagrant/.ssh/authorized_keys
-      chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m       Streaming Online          \e[0m"
