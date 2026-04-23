@@ -26,25 +26,36 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     ctrl.vm.provision "shell", inline: <<-SHELL
-    # Automatilcy uppdates the vm on start
-    apt-get update
+      # Automatically updates the vm on start
+      apt-get update
 
-    # Installs Ansible and Github-git on boot up
-    apt-get install -y ansible git
+      # Installs Ansible and Github-git on boot up
+      apt-get install -y ansible git netcat-openbsd
 
-    # Clone repo at boot up
-    git clone https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
+      # Clone repo at boot up
+      git clone -b 07-added-inventory.ini https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
-    sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
+      # Generate SSH keypair for Ansible
+      sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
 
-    cp /home/vagrant/.ssh/id_ed25519.pub /vagrant/ansible_id_ed25519.pub
+      # Share public key with other VMs via shared folder
+      cp /home/vagrant/.ssh/id_ed25519.pub /vagrant/ansible_id_ed25519.pub
 
+      # Wait for each VM to come online before adding to known_hosts
+      for ip in 192.168.56.11 192.168.56.12 192.168.56.13 192.168.56.14 192.168.56.15; do
+        echo "Väntar på $ip..."
+        until nc -z -w 3 $ip 22; do
+          sleep 3
+        done
+        ssh-keyscan -H $ip >> /home/vagrant/.ssh/known_hosts
+      done
+      chown vagrant:vagrant /home/vagrant/.ssh/known_hosts
 
-        echo -e "\e[32m=================================\e[0m"
-        echo -e "\e[32m         Control Online          \e[0m"
-        echo -e "\e[32m=================================\e[0m"
-      SHELL
-  end 
+      echo -e "\e[32m=================================\e[0m"
+      echo -e "\e[32m         Control Online          \e[0m"
+      echo -e "\e[32m=================================\e[0m"
+    SHELL
+  end
   
   # Loadbaring vm
   config.vm.define "Loadbaring" do |lb|
