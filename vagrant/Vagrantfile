@@ -16,7 +16,40 @@ CPUs = "1"
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/jammy64"
 
+  
+  # Control vm 
+  config.vm.define "control" do |ctrl|
+    ctrl.vm.hostname = "control"
+    ctrl.vm.network "private_network", ip: CONTROL_IP
+    ctrl.vm.provider "virtualbox" do |vb|
+      vb.memory = RAM
+      vb.cpus = CPUs
+    end
+    ctrl.vm.provision "shell", inline: <<-SHELL
 
+    # Automatilcy uppdates the vm on start
+    apt-get update
+
+    # Installs Ansible and Github-git on boot up
+    apt-get install -y ansible git
+
+    # Clone repo at boot up
+    git clone -b 07-added-inventory.ini https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
+
+    sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
+
+    # Exports the Ansible_config-folder to the right directory
+    export ANSIBLE_CONFIG=/path/to/ansible.cfg
+
+    cp /home/vagrant/.ssh/id_ed25519.pub /vagrant/ansible_id_ed25519.pub
+
+
+        echo -e "\e[32m=================================\e[0m"
+        echo -e "\e[32m         Control Online          \e[0m"
+        echo -e "\e[32m=================================\e[0m"
+      SHELL
+  end 
+  
   # Loadbaring vm
   config.vm.define "Loadbaring" do |lb|
     lb.vm.hostname = "control"
@@ -29,6 +62,16 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
+    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
+      echo "Väntar på publik nyckel..."
+      sleep 3
+    done
+
+    mkdir -p /home/vagrant/.ssh
+    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
+    chmod 700 /home/vagrant/.ssh
+    chmod 600 /home/vagrant/.ssh/authorized_keys
+    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m      Loadbaring Online          \e[0m"
@@ -48,6 +91,16 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
+    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
+      echo "Väntar på publik nyckel..."
+      sleep 3
+    done
+
+    mkdir -p /home/vagrant/.ssh
+    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
+    chmod 700 /home/vagrant/.ssh
+    chmod 600 /home/vagrant/.ssh/authorized_keys
+    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver1 Online        \e[0m"
@@ -67,6 +120,16 @@ Vagrant.configure("2") do |config|
     # Automatilcy uppdates the vm on start
     apt-get update
 
+    while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
+      echo "Väntar på publik nyckel..."
+      sleep 3
+    done
+
+    mkdir -p /home/vagrant/.ssh
+    cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
+    chmod 700 /home/vagrant/.ssh
+    chmod 600 /home/vagrant/.ssh/authorized_keys
+    chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
       echo -e "\e[32m       Webbserver2 Online        \e[0m"
@@ -86,6 +149,16 @@ Vagrant.configure("2") do |config|
       # Automatilcy uppdates the vm on start
       apt-get update
 
+      while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
+        echo "Väntar på publik nyckel..."
+        sleep 3
+      done
+
+      mkdir -p /home/vagrant/.ssh
+      cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
+      chmod 700 /home/vagrant/.ssh
+      chmod 600 /home/vagrant/.ssh/authorized_keys
+      chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m        Database Online          \e[0m"
@@ -105,6 +178,16 @@ Vagrant.configure("2") do |config|
       # Automatilcy uppdates the vm on start
       apt-get update
 
+      while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
+        echo "Väntar på publik nyckel..."
+        sleep 3
+      done
+
+      mkdir -p /home/vagrant/.ssh
+      cat /vagrant/ansible_id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
+      chmod 700 /home/vagrant/.ssh
+      chmod 600 /home/vagrant/.ssh/authorized_keys
+      chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m       Streaming Online          \e[0m"
@@ -112,27 +195,4 @@ Vagrant.configure("2") do |config|
       SHELL
   end 
 
-  # Control vm 
-  config.vm.define "control" do |ctrl|
-    ctrl.vm.hostname = "control"
-    ctrl.vm.network "private_network", ip: CONTROL_IP
-    ctrl.vm.provider "virtualbox" do |vb|
-      vb.memory = RAM
-      vb.cpus = CPUs
-    end
-    ctrl.vm.provision "shell", inline: <<-SHELL
-      # Automatically updates the vm on start
-      apt-get update
-
-      # Installs Ansible and Github-git on boot up
-      apt-get install -y ansible git
-
-      # Clone repo at boot up
-      git clone -b 07-added-inventory.ini https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
-
-      echo -e "\e[32m=================================\e[0m"
-      echo -e "\e[32m         Control Online          \e[0m"
-      echo -e "\e[32m=================================\e[0m"
-    SHELL
-  end
 end
