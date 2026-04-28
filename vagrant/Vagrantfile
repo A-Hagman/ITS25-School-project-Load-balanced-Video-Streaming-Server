@@ -3,7 +3,7 @@
 
 # Designates veribles with ip for the VMs
 CONTROL_IP = "192.168.56.10"
-LOADBARING_IP = "192.168.56.11"
+LOADBALANCER_IP = "192.168.56.11"
 WEBSERVER1_IP = "192.168.56.12"
 WEBSERVER2_IP = "192.168.56.13"
 DATABASE_IP = "192.168.56.14"
@@ -50,16 +50,16 @@ Vagrant.configure("2") do |config|
       SHELL
   end 
   
-  # Loadbaring vm
-  config.vm.define "loadbaring" do |lb|
-    lb.vm.hostname = "loadbaring"
-    lb.vm.network "private_network", ip: LOADBARING_IP
+  # Loadbalancer vm
+  config.vm.define "loadbalancer" do |lb|
+    lb.vm.hostname = "loadbalancer"
+    lb.vm.network "private_network", ip: LOADBALANCER_IP
     lb.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
     end
     lb.vm.provision "shell", inline: <<-SHELL
-    # Automatilcy uppdates the vm on start
+    # Automatically uppdates the vm on start
     apt-get update
 
     while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
     chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
-        echo -e "\e[32m      Loadbaring Online          \e[0m"
+        echo -e "\e[32m      Loadbalancer Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
       SHELL
   end 
