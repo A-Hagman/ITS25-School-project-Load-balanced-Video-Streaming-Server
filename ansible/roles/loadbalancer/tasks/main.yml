@@ -1,0 +1,25 @@
+# Installera nginx
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Configure loadbalancer
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/nitflix
+  notify: reload nginx
+
+- name: Activate site
+  file:
+    src: /etc/nginx/sites-available/nitflix
+    dest: /etc/nginx/sites-enabled/nitflix
+    state: link
+  notify: reload nginx
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

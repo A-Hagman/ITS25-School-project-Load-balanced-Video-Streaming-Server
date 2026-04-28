@@ -54,6 +54,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "loadbalancer" do |lb|
     lb.vm.hostname = "loadbalancer"
     lb.vm.network "private_network", ip: LOADBALANCER_IP
+    lb.vm.network "forward_port", guest: 80, host:8080
     lb.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
       vb.cpus = CPUs
