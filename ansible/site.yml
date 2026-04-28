@@ -1,1 +1,8 @@
 #kopplar inventory till roller och tasks
+- name: Configure loadbalancer
+  hosts: loadbalancer
+  become: yes
+  vars_files:
+    - vars/main.yml 
+  roles:
+    - loadbalancer
