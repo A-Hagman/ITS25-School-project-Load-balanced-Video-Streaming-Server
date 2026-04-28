@@ -36,11 +36,11 @@ Vagrant.configure("2") do |config|
     # Clone repo at boot up
     git clone -b 07-added-inventory.ini https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
+    chmod 755 /home/vagrant/project
+    
     sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
 
-    # Exports the Ansible_config-folder to the right directory
-    export ANSIBLE_CONFIG=/path/to/ansible.cfg
-
+  
     cp /home/vagrant/.ssh/id_ed25519.pub /vagrant/ansible_id_ed25519.pub
 
 
@@ -51,8 +51,8 @@ Vagrant.configure("2") do |config|
   end 
   
   # Loadbaring vm
-  config.vm.define "Loadbaring" do |lb|
-    lb.vm.hostname = "control"
+  config.vm.define "loadbaring" do |lb|
+    lb.vm.hostname = "loadbaring"
     lb.vm.network "private_network", ip: LOADBARING_IP
     lb.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
@@ -138,8 +138,8 @@ Vagrant.configure("2") do |config|
   end
   
   # Database vm
-  config.vm.define "Database" do |db|
-    db.vm.hostname = "Database"
+  config.vm.define "database" do |db|
+    db.vm.hostname = "database"
     db.vm.network "private_network", ip: DATABASE_IP
     db.vm.provider "virtualbox" do |vb|
       vb.memory = RAM
