@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y ansible git
 
     # Clone repo at boot up
-    git clone -b 07-added-inventory.ini https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
+    git clone -b 08-Loadbalancer-VM https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
     chmod 755 /home/vagrant/project
     
