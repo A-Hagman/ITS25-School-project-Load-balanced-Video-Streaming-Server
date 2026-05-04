@@ -1,0 +1,22 @@
+upstream nitflix_backend {
+# Webbservrar läggs till i fas 2 och 3
+{% for host in groups['webservers'] %}
+server {{ host }}:5000;
+{% endfor %}
+}
+
+server {
+listen 80;
+
+location / {
+proxy_pass http://nitflix_backend;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+}
+
+location /health {
+return 200 'loadbaring ok';
+add_header Content-Type text/plain;
+
+}
+}

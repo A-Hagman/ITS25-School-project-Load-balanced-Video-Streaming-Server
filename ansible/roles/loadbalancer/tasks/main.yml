@@ -18,6 +18,12 @@
     state: link
   notify: reload nginx
 
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
 - name: Start nginx
   service:
     name: nginx
