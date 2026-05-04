@@ -24,8 +24,8 @@
 
 - name: Skapa virtual environment
   command:
-  cmd: python3 -m venv /opt/nitflix/venv
-  creates: /opt/nitflix/venv
+    cmd: python3 -m venv /opt/nitflix/venv
+    creates: /opt/nitflix/venv
 
 - name: Installera Python-paket
   pip:
