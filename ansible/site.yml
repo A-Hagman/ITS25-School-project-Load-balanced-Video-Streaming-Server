@@ -13,4 +13,4 @@
   hosts: webservers
   become: yes
   roles:
-    - webserver
+    - webservers
