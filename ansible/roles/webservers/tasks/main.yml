@@ -17,7 +17,7 @@
    src: "{{ item }}"
    dest: /opt/nitflix/{{ item }}
    owner: vagrant
-   loop:
+  loop:
      - app.py
      - requirements.txt
   notify: restart flask
