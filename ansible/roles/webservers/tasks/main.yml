@@ -29,8 +29,8 @@
 
 - name: Installera Python-paket
   pip:
-  requirements: /opt/nitflix/requirements.txt
-  virtualenv: /opt/nitflix/venv
+    requirements: /opt/nitflix/requirements.txt
+    virtualenv: /opt/nitflix/venv
 
 - name: Installera systemd-tjänst
   template:
