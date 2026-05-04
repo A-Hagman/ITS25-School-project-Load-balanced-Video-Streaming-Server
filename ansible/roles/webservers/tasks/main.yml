@@ -1,0 +1,47 @@
+---
+- name: Installera Python och beroenden
+  apt:
+   name: [python3, python3-pip, python3-venv]
+   state: present
+   update_cache: yes
+
+- name: Skapa applikationskatalog
+  file:
+   path: /opt/nitflix
+   state: directory
+   owner: vagrant
+   mode: "0755"
+
+- name: Kopiera app.py och requirements.txt
+  copy:
+   src: "{{ item }}"
+   dest: /opt/nitflix/{{ item }}
+   owner: vagrant
+   loop:
+     - app.py
+     - requirements.txt
+  notify: restart flask
+
+- name: Skapa virtual environment
+  command:
+  cmd: python3 -m venv /opt/nitflix/venv
+  creates: /opt/nitflix/venv
+
+- name: Installera Python-paket
+  pip:
+  requirements: /opt/nitflix/requirements.txt
+  virtualenv: /opt/nitflix/venv
+
+- name: Installera systemd-tjänst
+  template:
+    src: flask.service.j2
+    dest: /etc/systemd/system/flask.service
+  notify:
+    - reload systemd
+    - restart flask
+
+- name: Starta och aktivera Flask
+  service:
+    name: flask
+    state: started
+    enabled: yes

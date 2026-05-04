@@ -6,3 +6,11 @@
     - vars/vars.yml 
   roles:
     - loadbalancer
+
+#Lägg till databaskommandon här. Måste vara före webbservrar
+
+- name: Configure webbservers
+  hosts: webservers
+  become: yes
+  roles:
+    - webserver
