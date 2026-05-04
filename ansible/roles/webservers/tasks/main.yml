@@ -1,25 +1,25 @@
 ---
 - name: Installera Python och beroenden
   apt:
-   name: [python3, python3-pip, python3-venv]
-   state: present
-   update_cache: yes
+    name: [python3, python3-pip, python3-venv]
+    state: present
+    update_cache: yes
 
 - name: Skapa applikationskatalog
   file:
-   path: /opt/nitflix
-   state: directory
-   owner: vagrant
-   mode: "0755"
+    path: /opt/nitflix
+    state: directory
+    owner: vagrant
+    mode: "0755"
 
 - name: Kopiera app.py och requirements.txt
   copy:
-   src: "{{ item }}"
-   dest: /opt/nitflix/{{ item }}
-   owner: vagrant
+    src: "{{ item }}"
+    dest: /opt/nitflix/{{ item }}
+    owner: vagrant
   loop:
-     - app.py
-     - requirements.txt
+    - app.py
+    - requirements.txt
   notify: restart flask
 
 - name: Skapa virtual environment
