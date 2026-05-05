@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS videos (
     views INTEGER DEFAULT 0
 );
 
+GRANT SELECT ON videos TO nitflix_user;
+GRANT USAGE, SELECT ON SEQUENCE videos_id_seq TO nitflix_user;
+
 INSERT INTO videos (videotitle, filepath, uploadedate, views)
 VALUES (
     'How to Nitflix and chill',
