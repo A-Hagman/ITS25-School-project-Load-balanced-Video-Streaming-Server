@@ -43,11 +43,15 @@ Vagrant.configure("2") do |config|
   
     cp /home/vagrant/.ssh/id_ed25519.pub /vagrant/ansible_id_ed25519.pub
 
+    if [ -f /vagrant/secrets.yml ]; then
+      cp /vagrant/secrets.yml /home/vagrant/project/ansible/vars/secrets.yml
+      echo "secrets.yml kopierad"
+    fi
 
-        echo -e "\e[32m=================================\e[0m"
-        echo -e "\e[32m         Control Online          \e[0m"
-        echo -e "\e[32m=================================\e[0m"
-      SHELL
+      echo -e "\e[32m=================================\e[0m"
+      echo -e "\e[32m         Control Online          \e[0m"
+      echo -e "\e[32m=================================\e[0m"
+    SHELL
   end 
   
   # Loadbalancer vm
