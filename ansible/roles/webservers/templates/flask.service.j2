@@ -5,11 +5,14 @@ After=network.target
 [Service]
 User=vagrant
 WorkingDirectory=/opt/nitflix
-Environment="PORT=5000"
+Environment="DB_HOST={{ db_host }}"
+Environment="DB_NAME={{ db_name }}"
+Environment="DB_USER={{ db_user }}"
+Environment="DB_PASS={{ db_password }}"
 ExecStart=/opt/nitflix/venv/bin/gunicorn \
---workers 2 \
---bind 0.0.0.0:5000 \
-app:app
+    --workers 2 \
+    --bind 0.0.0.0:5000 \
+    app:app
 Restart=always
 RestartSec=5
 

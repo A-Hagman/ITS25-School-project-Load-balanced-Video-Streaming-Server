@@ -1,16 +1,26 @@
 #kopplar inventory till roller och tasks
-- name: Configure loadbalancer
-  hosts: loadbalancer
+- name: Configure database
+  hosts: database
   become: yes
   vars_files:
-    - vars/vars.yml 
+    - vars/vars.yml
+    - vars/secrets.yml
   roles:
-    - loadbalancer
-
-#Lägg till databaskommandon här. Måste vara före webbservrar
+    - database
 
 - name: Configure webbservers
   hosts: webservers
   become: yes
+  vars_files:
+    - vars/vars.yml
+    - vars/secrets.yml
   roles:
     - webservers
+
+- name: Configure loadbalancer
+  hosts: loadbalancer
+  become: yes
+  vars_files:
+    - vars/vars.yml
+  roles:
+    - loadbalancer

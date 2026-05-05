@@ -1,0 +1,60 @@
+---
+- name: Installera PostgreSQL
+  apt:
+    name: [postgresql, postgresql-contrib, python3-psycopg2]
+    state: present
+    update_cache: yes
+
+- name: Starta PostgreSQL
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Skapa databasanvändare
+  become_user: postgres
+  postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    state: present
+
+- name: Skapa databas
+  become_user: postgres
+  postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+    state: present
+
+- name: Ge användaren rättigheter
+  become_user: postgres
+  postgresql_privs:
+    db: "{{ db_name }}"
+    role: "{{ db_user }}"
+    objs: ALL_IN_SCHEMA
+    privs: SELECT,INSERT,UPDATE
+
+- name: Kopiera seed.sql
+  copy:
+    src: seed.sql
+    dest: /tmp/seed.sql
+    owner: postgres
+
+- name: Kör seed.sql
+  become_user: postgres
+  command: psql -d nitflix -f /tmp/seed.sql
+  register: seed_result
+  changed_when: "'INSERT' in seed_result.stdout"
+
+- name: Tillåt anslutningar från webbservrar
+  lineinfile:
+    path: /etc/postgresql/14/main/pg_hba.conf
+    line: "host nitflix nitflix_user 192.168.56.0/24 md5"
+    state: present
+  notify: restart postgresql
+
+- name: Konfigurera PostgreSQL att lyssna på alla gränssnitt
+  lineinfile:
+    path: /etc/postgresql/14/main/postgresql.conf
+    regexp: "^#?listen_addresses"
+    line: "listen_addresses = '*'"
+  notify: restart postgresql

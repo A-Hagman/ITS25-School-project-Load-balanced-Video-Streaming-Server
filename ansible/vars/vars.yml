@@ -1,0 +1,5 @@
+# vars.yml
+db_name: nitflix
+db_host: 192.168.56.14
+streaming_ip: 192.168.56.15
+loadbalancer_ip: 192.168.56.11
