@@ -194,6 +194,17 @@ Vagrant.configure("2") do |config|
       chmod 600 /home/vagrant/.ssh/authorized_keys
       chown -R vagrant:vagrant  /home/vagrant/.ssh
 
+      # Skapa videokatalog och kopiera videofil om den finns
+      mkdir -p /var/www/videos
+      if [ -f /vagrant/nitflix.mp4 ]; then
+        cp /vagrant/nitflix.mp4 /var/www/videos/
+        chown www-data:www-data /var/www/videos/nitflix.mp4
+        chmod 644 /var/www/videos/nitflix.mp4
+        echo "Videofil kopierad"
+      else
+        echo "Varning: nitflix.mp4 hittades inte i /vagrant/"
+      fi
+
         echo -e "\e[32m=================================\e[0m"
         echo -e "\e[32m       Streaming Online          \e[0m"
         echo -e "\e[32m=================================\e[0m"
