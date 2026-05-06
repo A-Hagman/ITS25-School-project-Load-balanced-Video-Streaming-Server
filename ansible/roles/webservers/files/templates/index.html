@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Nitflix™</title>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/static/streming.css">
+        <link rel="icon" href="img/icon.png">
+    </head>
+    <body>
+        <header>
+            <h1>Nitflix™</h1>
+            <span class="dot"></span>
+        </header>
+
+        <main>
+            {% for video in videos %}
+            <div class="video-wrapper">
+                <video controls width="1000">
+                    <source src="{{ video.filepath }}" type="video/mp4">
+                </video>
+                <div class="video-info">
+                    <h2>{{ video.videotitle }}</h2>
+                    <div class="video-meta">
+                        <h3 class="metaz">{{ video.uploadedate }}</h3>
+                        <span class="meta-divider"></span>
+                        <h3 class="views">{{ video.views }} views</h3>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <span class="label">Now Playing</span>
+        </main>
+
+        <footer>© Nitflix™ — All rights reserved</footer>
+    </body>
+</html>

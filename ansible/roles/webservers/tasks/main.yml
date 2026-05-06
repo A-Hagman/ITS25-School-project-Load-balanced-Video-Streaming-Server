@@ -12,6 +12,18 @@
     owner: vagrant
     mode: "0755"
 
+- name: Skapa templates-katalog
+  file:
+    path: /opt/nitflix/templates
+    state: directory
+    owner: vagrant
+
+- name: Skapa static-katalog
+  file:
+    path: /opt/nitflix/static
+    state: directory
+    owner: vagrant
+
 - name: Kopiera app.py och requirements.txt
   copy:
     src: "{{ item }}"
@@ -21,6 +33,19 @@
     - app.py
     - requirements.txt
   notify: restart flask
+
+- name: Kopiera HTML-mall
+  copy:
+    src: templates/index.html
+    dest: /opt/nitflix/templates/index.html
+    owner: vagrant
+  notify: restart flask
+
+- name: Kopiera CSS
+  copy:
+    src: streming.css
+    dest: /opt/nitflix/static/streming.css
+    owner: vagrant
 
 - name: Skapa virtual environment
   command:
