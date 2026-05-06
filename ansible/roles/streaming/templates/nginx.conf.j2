@@ -1,0 +1,8 @@
+server {
+listen 80;
+location /videos/ {
+root /var/www;
+autoindex off;
+add_header Accept-Ranges bytes;
+}
+}

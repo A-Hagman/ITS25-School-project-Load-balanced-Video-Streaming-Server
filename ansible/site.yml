@@ -24,3 +24,9 @@
     - vars/vars.yml
   roles:
     - loadbalancer
+
+- name: Configure streaming
+  hosts: streaming
+  become: yes
+  roles:
+    - streaming
