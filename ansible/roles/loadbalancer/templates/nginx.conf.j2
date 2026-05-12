@@ -1,22 +1,16 @@
-upstream nitflix_backend {
 # Configuration file for nginx to act like a loadbalancer
-{% for host in groups['webservers'] %}
-server {{ host }}:5000;
-{% endfor %}
+upstream nitflix_backend {
+    {% for host in groups['webservers'] %}
+    server {{ host }}:5000;
+    {% endfor %}
 }
 
 server {
-listen 80;
+    listen 80;
 
-location / {
-proxy_pass http://nitflix_backend;
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-}
-
-location /health {
-return 200 'loadbaring ok';
-add_header Content-Type text/plain;
-
-}
+    location / {
+        proxy_pass http://nitflix_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
 }
