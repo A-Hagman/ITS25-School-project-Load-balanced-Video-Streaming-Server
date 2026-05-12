@@ -37,6 +37,7 @@ Vagrant.configure("2") do |config|
     git clone -b 12-Verification-Script https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
     chmod 755 /home/vagrant/project
+    chmod +x /home/vagrant/project/ansible/verify.sh
     
     sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
 
