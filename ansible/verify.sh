@@ -40,9 +40,9 @@ for IP in 192.168.56.12 192.168.56.13; do
     result=$(ansible all -m command -a "systemctl is-active flask" \
         --limit $IP 2>/dev/null | grep -c "active")
     if [ "$result" -ge 1 ]; then
-        ok "flask.service aktiv → $IP"
+        ok "flask.service active → $IP"
     else
-        fail "flask.service aktiv → $IP"
+        fail "flask.service active → $IP"
     fi
 done
 
@@ -50,9 +50,9 @@ for IP in 192.168.56.11 192.168.56.15; do
     result=$(ansible all -m command -a "systemctl is-active nginx" \
         --limit $IP 2>/dev/null | grep -c "active")
     if [ "$result" -ge 1 ]; then
-        ok "nginx.service aktiv → $IP"
+        ok "nginx.service active → $IP"
     else
-        fail "nginx.service aktiv → $IP"
+        fail "nginx.service active → $IP"
     fi
 done
 
@@ -60,9 +60,9 @@ for IP in 192.168.56.14; do
     result=$(ansible all -m command -a "systemctl is-active postgresql" \
         --limit $IP 2>/dev/null | grep -c "active")
     if [ "$result" -ge 1 ]; then
-        ok "postgresql.service aktiv → $IP"
+        ok "postgresql.service active → $IP"
     else
-        fail "postgresql.service aktiv → $IP"
+        fail "postgresql.service active → $IP"
     fi
 done
 
@@ -83,13 +83,20 @@ done
 section "4. Load balancing (round-robin)"
 # ──────────────────────────────────────
 
-HOST1=$(curl -s --connect-timeout 5 http://192.168.56.12:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
-HOST2=$(curl -s --connect-timeout 5 http://192.168.56.13:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+for i in 1 2 3 4; do
+    RESPONSE=$(curl -s --connect-timeout 5 http://192.168.56.11/health)
+    HOSTNAME=$(echo "$RESPONSE" | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+    IP=$(ansible all --list-hosts --limit "$HOSTNAME" 2>/dev/null | tail -1 | tr -d ' ')
+    info "Curl $i → $HOSTNAME ($IP)"
+done
 
-if [ "$HOST1" = "webserver1" ] && [ "$HOST2" = "webserver2" ]; then
-    ok "Round-robin works ($HOST1 ↔ $HOST2)"
+HOST_A=$(curl -s --connect-timeout 5 http://192.168.56.11/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+HOST_B=$(curl -s --connect-timeout 5 http://192.168.56.11/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+
+if [ "$HOST_A" != "$HOST_B" ]; then
+    ok "Round-robin confirmed — responses alternate between servers"
 else
-    fail "Round-robin does not work"
+    fail "Round-robin not working — same server responded twice"
 fi
 
 # ──────────────────────────────────────
