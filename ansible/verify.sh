@@ -83,10 +83,18 @@ done
 section "4. Load balancing (round-robin)"
 # ──────────────────────────────────────
 
+get_ip() {
+    case "$1" in
+        "webserver1") echo "192.168.56.12" ;;
+        "webserver2") echo "192.168.56.13" ;;
+        *) echo "unknown" ;;
+    esac
+}
+
 for i in 1 2 3 4; do
     RESPONSE=$(curl -s --connect-timeout 5 http://192.168.56.11/health)
     HOSTNAME=$(echo "$RESPONSE" | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
-    IP=$(ansible all --list-hosts --limit "$HOSTNAME" 2>/dev/null | tail -1 | tr -d ' ')
+    IP=$(get_ip "$HOSTNAME")
     info "Curl $i → $HOSTNAME ($IP)"
 done
 
