@@ -1,4 +1,4 @@
-#kopplar inventory till roller och tasks
+# Connects inventory to roles and tasks
 - name: Configure database
   hosts: database
   become: yes

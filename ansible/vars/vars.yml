@@ -1,4 +1,4 @@
-# vars.yml
+# This file is defining variables for ansible
 db_name: nitflix
 db_host: 192.168.56.14
 streaming_ip: 192.168.56.15

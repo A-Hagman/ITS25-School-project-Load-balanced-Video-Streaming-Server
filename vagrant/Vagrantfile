@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Designates veribles with ip for the VMs
+# Designates variables with ip for the VMs
 CONTROL_IP = "192.168.56.10"
 LOADBALANCER_IP = "192.168.56.11"
 WEBSERVER1_IP = "192.168.56.12"
@@ -9,7 +9,7 @@ WEBSERVER2_IP = "192.168.56.13"
 DATABASE_IP = "192.168.56.14"
 STREAMING_IP = "192.168.56.15"
 
-# Designates veribles for RAM and CPUs
+# Designates variables for RAM and CPUs
 RAM = "1024"
 CPUs = "1"
 
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/jammy64"
 
   
-  # Control vm 
+  # Control VM
   config.vm.define "control" do |ctrl|
     ctrl.vm.hostname = "control"
     ctrl.vm.network "private_network", ip: CONTROL_IP
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     end
     ctrl.vm.provision "shell", inline: <<-SHELL
 
-    # Automatically uppdates the vm on start
+    # Automatically updates the VM on start
     apt-get update
 
     # Installs Ansible and Github-git on boot up
@@ -37,6 +37,7 @@ Vagrant.configure("2") do |config|
     git clone -b 13-Clean-up https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
     chmod 755 /home/vagrant/project
+    # Gives access to verify-script
     chmod +x /home/vagrant/project/ansible/verify.sh
     
     sudo -u vagrant ssh-keygen -t ed25519 -f /home/vagrant/.ssh/id_ed25519 -N "" -C "ansible-kontroll"
@@ -46,7 +47,7 @@ Vagrant.configure("2") do |config|
 
     if [ -f /vagrant/secrets.yml ]; then
       cp /vagrant/secrets.yml /home/vagrant/project/ansible/vars/secrets.yml
-      echo "secrets.yml kopierad"
+      echo "secrets.yml copied"
     fi
 
       echo -e "\e[32m=================================\e[0m"
@@ -55,7 +56,7 @@ Vagrant.configure("2") do |config|
     SHELL
   end 
   
-  # Loadbalancer vm
+  # Loadbalancer VM
   config.vm.define "loadbalancer" do |lb|
     lb.vm.hostname = "loadbalancer"
     lb.vm.network "private_network", ip: LOADBALANCER_IP
@@ -65,11 +66,11 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     lb.vm.provision "shell", inline: <<-SHELL
-    # Automatically uppdates the vm on start
+    # Automatically updates the VM on start
     apt-get update
 
     while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
+      echo "Waiting for public key.."
       sleep 3
     done
 
@@ -80,7 +81,7 @@ Vagrant.configure("2") do |config|
     chown -R vagrant:vagrant  /home/vagrant/.ssh
 
         echo -e "\e[32m=================================\e[0m"
-        echo -e "\e[32m      Loadbalancer Online          \e[0m"
+        echo -e "\e[32m      Loadbalancer Online        \e[0m"
         echo -e "\e[32m=================================\e[0m"
       SHELL
   end 
@@ -94,11 +95,11 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     web1.vm.provision "shell", inline: <<-SHELL
-    # Automatilcy uppdates the vm on start
+    # Automatically updates the VM on start
     apt-get update
 
     while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
+      echo "Waiting for public key.."
       sleep 3
     done
 
@@ -109,7 +110,7 @@ Vagrant.configure("2") do |config|
     chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
-      echo -e "\e[32m       Webbserver1 Online        \e[0m"
+      echo -e "\e[32m       Webbserver 1 Online       \e[0m"
       echo -e "\e[32m=================================\e[0m"
     SHELL
   end
@@ -123,11 +124,11 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     web2.vm.provision "shell", inline: <<-SHELL
-    # Automatilcy uppdates the vm on start
+    # Automatically updates the VM on start
     apt-get update
 
     while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-      echo "Väntar på publik nyckel..."
+      echo "Waiting for public key.."
       sleep 3
     done
 
@@ -138,12 +139,12 @@ Vagrant.configure("2") do |config|
     chown -R vagrant:vagrant  /home/vagrant/.ssh
 
       echo -e "\e[32m=================================\e[0m"
-      echo -e "\e[32m       Webbserver2 Online        \e[0m"
+      echo -e "\e[32m       Webbserver 2 Online       \e[0m"
       echo -e "\e[32m=================================\e[0m"
     SHELL
   end
   
-  # Database vm
+  # Database VM
   config.vm.define "database" do |db|
     db.vm.hostname = "database"
     db.vm.network "private_network", ip: DATABASE_IP
@@ -152,11 +153,11 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     db.vm.provision "shell", inline: <<-SHELL
-      # Automatilcy uppdates the vm on start
+      # Automatically updates the VM on start
       apt-get update
 
       while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-        echo "Väntar på publik nyckel..."
+        echo "Waiting for public key.."
         sleep 3
       done
 
@@ -172,7 +173,7 @@ Vagrant.configure("2") do |config|
       SHELL
   end 
 
-  # Streaming vm
+  # Streaming VM
   config.vm.define "streaming" do |str|
     str.vm.hostname = "streaming"
     str.vm.network "private_network", ip: STREAMING_IP
@@ -181,11 +182,11 @@ Vagrant.configure("2") do |config|
       vb.cpus = CPUs
     end
     str.vm.provision "shell", inline: <<-SHELL
-      # Automatilcy uppdates the vm on start
+      # Automatically updates the VM on start
       apt-get update
 
       while [ ! -f /vagrant/ansible_id_ed25519.pub ]; do
-        echo "Väntar på publik nyckel..."
+        echo "Waiting for public key.."
         sleep 3
       done
 
@@ -195,15 +196,15 @@ Vagrant.configure("2") do |config|
       chmod 600 /home/vagrant/.ssh/authorized_keys
       chown -R vagrant:vagrant  /home/vagrant/.ssh
 
-      # Skapa videokatalog och kopiera videofil om den finns
+      # Creates video directory and copy video file if it exists
       mkdir -p /var/www/videos
       if [ -f /vagrant/nitflix.mp4 ]; then
         cp /vagrant/nitflix.mp4 /var/www/videos/
         chown www-data:www-data /var/www/videos/nitflix.mp4
         chmod 644 /var/www/videos/nitflix.mp4
-        echo "Videofil kopierad"
+        echo "Video file copied"
       else
-        echo "Varning: nitflix.mp4 hittades inte i /vagrant/"
+        echo "Warning: nitflix.mp4 not found in /vagrant/"
       fi
 
         echo -e "\e[32m=================================\e[0m"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # ══════════════════════════════════════
-#  Nitflix — Verifikationsskript
-#  Kör från: /home/vagrant/project/ansible/
+#  Nitflix — Verification script
+#  Run from: /home/vagrant/project/ansible/
 # ══════════════════════════════════════
 
 PASS=0
@@ -20,7 +20,7 @@ info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 section() { echo -e "\n${YELLOW}══ $1 ══${NC}"; }
 
 # ──────────────────────────────────────
-section "1. Ansible-anslutning (ping)"
+section "1. Ansible connection (ping)"
 # ──────────────────────────────────────
 
 for IP in 192.168.56.11 192.168.56.12 192.168.56.13 192.168.56.14 192.168.56.15; do
@@ -33,7 +33,7 @@ for IP in 192.168.56.11 192.168.56.12 192.168.56.13 192.168.56.14 192.168.56.15;
 done
 
 # ──────────────────────────────────────
-section "2. Systemd-tjänster"
+section "2. Systemd services"
 # ──────────────────────────────────────
 
 for IP in 192.168.56.12 192.168.56.13; do
@@ -67,7 +67,7 @@ for IP in 192.168.56.14; do
 done
 
 # ──────────────────────────────────────
-section "3. HTTP-svar från Flask (webbservrar)"
+section "3. HTTP-response from Flask (webbservers)"
 # ──────────────────────────────────────
 
 for IP in 192.168.56.12 192.168.56.13; do
@@ -80,76 +80,76 @@ for IP in 192.168.56.12 192.168.56.13; do
 done
 
 # ──────────────────────────────────────
-section "4. Lastbalansering (round-robin)"
+section "4. Load balancing (round-robin)"
 # ──────────────────────────────────────
 
 HOST1=$(curl -s --connect-timeout 5 http://192.168.56.12:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
 HOST2=$(curl -s --connect-timeout 5 http://192.168.56.13:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
 
 if [ "$HOST1" = "webserver1" ] && [ "$HOST2" = "webserver2" ]; then
-    ok "Round-robin fungerar ($HOST1 ↔ $HOST2)"
+    ok "Round-robin works ($HOST1 ↔ $HOST2)"
 else
-    fail "Round-robin fungerar inte"
+    fail "Round-robin does not work"
 fi
 
 # ──────────────────────────────────────
-section "5. HTML-svar via lastbalanseraren"
+section "5. HTML-response via the load balancer"
 # ──────────────────────────────────────
 
 status=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 http://192.168.56.11/)
 if [ "$status" -eq 200 ]; then
-    ok "Loadbaring returnerar HTTP 200"
+    ok "Loadbaring returns HTTP 200"
 else
-    fail "Loadbaring returnerar HTTP $status (förväntat 200)"
+    fail "Loadbaring returns HTTP $status (expected 200)"
 fi
 
-# Kolla att HTML innehåller Nitflix
+# Check that the HTML contains Nitflix
 content=$(curl -s --connect-timeout 5 http://192.168.56.11/)
 if echo "$content" | grep -q "Nitflix"; then
-    ok "HTML innehåller 'Nitflix'"
+    ok "HTML contain 'Nitflix'"
 else
-    fail "HTML innehåller inte 'Nitflix' — troligen 500-fel"
+    fail "HTML does not contain 'Nitflix' — probably 500-error"
 fi
 
 # ──────────────────────────────────────
-section "6. Databas nåbar från webbservrar"
+section "6. Database accessible from web servers"
 # ──────────────────────────────────────
 
 result=$(ansible all -m wait_for \
     -a "host=192.168.56.14 port=5432 timeout=5" \
     --limit 192.168.56.12 2>/dev/null | grep -c "SUCCESS")
 if [ "$result" -ge 1 ]; then
-    ok "PostgreSQL port 5432 nåbar från webserver1"
+    ok "PostgreSQL port 5432 reachable from webserver1"
 else
-    fail "PostgreSQL port 5432 ej nåbar från webserver1"
+    fail "PostgreSQL port 5432 not reachable from webserver1"
 fi
 
 # ──────────────────────────────────────
-section "7. Streaming-server"
+section "7. Streaming server"
 # ──────────────────────────────────────
 
 status=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 \
     http://192.168.56.15/videos/nitflix.mp4)
 if [ "$status" -eq 200 ]; then
-    ok "Videofil tillgänglig på streaming-servern (HTTP 200)"
+    ok "Video file available on the streaming server (HTTP 200)"
 elif [ "$status" -eq 404 ]; then
-    fail "Videofil saknas på streaming-servern (HTTP 404)"
+    fail "Video file missing from streaming server (HTTP 404)"
 else
-    fail "Streaming-server svarar med HTTP $status"
+    fail "Streaming server responds with HTTP $status"
 fi
 
 # ──────────────────────────────────────
-section "Sammanfattning"
+section "Summary"
 # ──────────────────────────────────────
 
 TOTAL=$((PASS + FAIL))
 echo ""
-echo -e "  Godkänt:    ${GREEN}$PASS / $TOTAL${NC}"
-echo -e "  Underkänt:  ${RED}$FAIL / $TOTAL${NC}"
+echo -e "  Approved:    ${GREEN}$PASS / $TOTAL${NC}"
+echo -e "  Failed:  ${RED}$FAIL / $TOTAL${NC}"
 echo ""
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}Alla kontroller godkända — Nitflix är redo!${NC}"
+    echo -e "${GREEN} All checks passed — Nitflix is ready!${NC}"
 else
-    echo -e "${RED}$FAIL kontroll(er) misslyckades — se FEL ovan.${NC}"
+    echo -e "${RED}$FAIL Check(s) failed — see ERROR above.${NC}"
 fi

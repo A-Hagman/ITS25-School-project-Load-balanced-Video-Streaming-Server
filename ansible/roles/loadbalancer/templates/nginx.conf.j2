@@ -1,5 +1,5 @@
 upstream nitflix_backend {
-# Webbservrar läggs till i fas 2 och 3
+# Configuration file for nginx to act like a loadbalancer
 {% for host in groups['webservers'] %}
 server {{ host }}:5000;
 {% endfor %}

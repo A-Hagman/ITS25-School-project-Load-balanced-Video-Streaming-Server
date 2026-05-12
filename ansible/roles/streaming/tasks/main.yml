@@ -1,37 +1,37 @@
 ---
-- name: Installera nginx
+- name: Install nginx
   apt:
     name: nginx
     state: present
     update_cache: yes
 
-- name: Skapa videokatalog
+- name: Create video directory
   file:
     path: /var/www/videos
     state: directory
     owner: www-data
     mode: "0755"
 
-- name: Konfigurera nginx filserver
+- name: Configure nginx file server
   template:
     src: nginx.conf.j2
     dest: /etc/nginx/sites-available/streaming
   notify: reload nginx
 
-- name: Aktivera site
+- name: Activate site
   file:
     src: /etc/nginx/sites-available/streaming
     dest: /etc/nginx/sites-enabled/streaming
     state: link
   notify: reload nginx
 
-- name: Ta bort default site
+- name: Remove default site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify: reload nginx
 
-- name: Starta nginx
+- name: Start nginx
   service:
     name: nginx
     state: started

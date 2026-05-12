@@ -1,30 +1,30 @@
 ---
-- name: Installera Python och beroenden
+- name: Install Python and dependencies
   apt:
     name: [python3, python3-pip, python3-venv]
     state: present
     update_cache: yes
 
-- name: Skapa applikationskatalog
+- name: Create application directory
   file:
     path: /opt/nitflix
     state: directory
     owner: vagrant
     mode: "0755"
 
-- name: Skapa templates-katalog
+- name: Create templates directory
   file:
     path: /opt/nitflix/templates
     state: directory
     owner: vagrant
 
-- name: Skapa static-katalog
+- name: Create static directory
   file:
     path: /opt/nitflix/static
     state: directory
     owner: vagrant
 
-- name: Kopiera app.py och requirements.txt
+- name: Copy app.py and requirements.txt
   copy:
     src: "{{ item }}"
     dest: /opt/nitflix/{{ item }}
@@ -34,30 +34,30 @@
     - requirements.txt
   notify: restart flask
 
-- name: Kopiera HTML-mall
+- name: Copy HTML template
   copy:
     src: templates/index.html
     dest: /opt/nitflix/templates/index.html
     owner: vagrant
   notify: restart flask
 
-- name: Kopiera CSS
+- name: Copy CSS
   copy:
     src: streming.css
     dest: /opt/nitflix/static/streming.css
     owner: vagrant
 
-- name: Skapa virtual environment
+- name: Create virtual environment
   command:
     cmd: python3 -m venv /opt/nitflix/venv
     creates: /opt/nitflix/venv
 
-- name: Installera Python-paket
+- name: Install Python packages
   pip:
     requirements: /opt/nitflix/requirements.txt
     virtualenv: /opt/nitflix/venv
 
-- name: Installera systemd-tjänst
+- name: Install systemd service
   template:
     src: flask.service.j2
     dest: /etc/systemd/system/flask.service
@@ -65,7 +65,7 @@
     - reload systemd
     - restart flask
 
-- name: Starta och aktivera Flask
+- name: Start and activate Flask
   service:
     name: flask
     state: started
