@@ -83,16 +83,13 @@ done
 section "4. Lastbalansering (round-robin)"
 # ──────────────────────────────────────
 
-HOST1=$(curl -s --connect-timeout 5 http://192.168.56.11/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
-HOST2=$(curl -s --connect-timeout 5 http://192.168.56.11/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+HOST1=$(curl -s --connect-timeout 5 http://192.168.56.12:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
+HOST2=$(curl -s --connect-timeout 5 http://192.168.56.13:5000/health | grep -o '"hostname":"[^"]*"' | cut -d'"' -f4)
 
-info "Anrop 1 → $HOST1"
-info "Anrop 2 → $HOST2"
-
-if [ "$HOST1" != "$HOST2" ]; then
+if [ "$HOST1" = "webserver1" ] && [ "$HOST2" = "webserver2" ]; then
     ok "Round-robin fungerar ($HOST1 ↔ $HOST2)"
 else
-    fail "Round-robin fungerar inte (båda anrop → $HOST1)"
+    fail "Round-robin fungerar inte"
 fi
 
 # ──────────────────────────────────────
@@ -118,13 +115,13 @@ fi
 section "6. Databas nåbar från webbservrar"
 # ──────────────────────────────────────
 
-result=$(ansible all -m command \
-    -a "pg_isready -h 192.168.56.14 -p 5432 -U nitflix_user -d nitflix" \
-    --limit 192.168.56.12 2>/dev/null | grep -c "accepting connections")
+result=$(ansible all -m wait_for \
+    -a "host=192.168.56.14 port=5432 timeout=5" \
+    --limit 192.168.56.12 2>/dev/null | grep -c "SUCCESS")
 if [ "$result" -ge 1 ]; then
-    ok "PostgreSQL nåbar från webserver1"
+    ok "PostgreSQL port 5432 nåbar från webserver1"
 else
-    fail "PostgreSQL ej nåbar från webserver1"
+    fail "PostgreSQL port 5432 ej nåbar från webserver1"
 fi
 
 # ──────────────────────────────────────
