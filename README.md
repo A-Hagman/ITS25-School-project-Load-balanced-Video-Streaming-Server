@@ -397,7 +397,7 @@ For the streaming VM we chose it because Nginx has a technique called sendfile, 
 ____
 *Skapad av: [Anton Hagman, William Åström]*  
 *Kurs: Virtualiseringsteknik*  
-*Datum: [2026-05-12]*
+*Datum: [2026-05-13]*
 
 ___
 
