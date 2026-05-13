@@ -113,9 +113,9 @@ section "5. HTML-response via the load balancer"
 
 status=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 http://192.168.56.11/)
 if [ "$status" -eq 200 ]; then
-    ok "Loadbaring returns HTTP 200"
+    ok "Load balancer returns HTTP 200"
 else
-    fail "Loadbaring returns HTTP $status (expected 200)"
+    fail "Load balancer returns HTTP $status (expected 200)"
 fi
 
 # Check that the HTML contains Nitflix
