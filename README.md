@@ -20,7 +20,7 @@ ______
 
 _________
 ## **Architecture**
-![Topology](/Pictures/Topology.png)
+![Topology](/pictures/topology.png)
 ____
 ## **Environment and IP addresses**
 
