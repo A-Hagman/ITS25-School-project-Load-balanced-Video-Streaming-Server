@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y ansible git
 
     # Clone repo at boot up
-    git clone -b 13-Clean-up https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
+    git clone https://github.com/A-Hagman/ITS25-School-project-Load-balanced-Video-Streaming-Server.git /home/vagrant/project
 
     chmod 755 /home/vagrant/project
     # Gives access to verify-script
